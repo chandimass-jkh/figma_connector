@@ -1,0 +1,8 @@
+{
+  "name": "Claude ER Diagram Auto-Creator",
+  "id": "claude-er-diagram-auto",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": ["figjam"],
+  "ui": "ui.html"
+}

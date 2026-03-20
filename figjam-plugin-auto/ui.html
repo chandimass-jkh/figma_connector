@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    .diagram-info {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .diagram-info div {
+      margin: 5px 0;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 5px;
+    }
+
+    #create-btn {
+      background: white;
+      color: #667eea;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #create-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    #create-btn:active {
+      transform: translateY(0);
+    }
+
+    #cancel-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    #cancel-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    .success {
+      color: #4ade80;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+
+    .loading {
+      display: inline-block;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span>🎨</span>
+      <span>ER Diagram Creator</span>
+    </h1>
+    <p class="subtitle">Retail Sales Data Warehouse - Star Schema</p>
+
+    <div class="diagram-info">
+      <div>📊 5 Tables (1 Fact + 4 Dimensions)</div>
+      <div>🔗 4 Relationships</div>
+      <div>📝 4 Legend Sticky Notes</div>
+    </div>
+
+    <div>
+      <button id="create-btn">✨ Create Diagram</button>
+    </div>
+    <div>
+      <button id="cancel-btn">Cancel</button>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    const createBtn = document.getElementById('create-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const status = document.getElementById('status');
+
+    createBtn.onclick = () => {
+      createBtn.disabled = true;
+      createBtn.textContent = '⏳ Creating...';
+      status.innerHTML = '<span class="loading">Building your diagram...</span>';
+      parent.postMessage({ pluginMessage: { type: 'create-diagram' } }, '*');
+    };
+
+    cancelBtn.onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
+    };
+
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+
+      if (msg.type === 'creation-success') {
+        status.innerHTML = '<span class="success">✅ Diagram created successfully!</span>';
+        createBtn.textContent = '✅ Done!';
+      } else if (msg.type === 'creation-error') {
+        console.error('❌ Plugin Error:', msg.error);
+        console.error('Error Details:', msg.errorDetails);
+        console.error('Stack Trace:', msg.errorStack);
+
+        const errorHtml = `
+          <span class="error">❌ Error: ${msg.error}</span>
+          <br><br>
+          <small style="opacity: 0.8;">
+            Open console (Cmd+Option+I) for full details
+          </small>
+        `;
+        status.innerHTML = errorHtml;
+        createBtn.disabled = false;
+        createBtn.textContent = '🔄 Try Again';
+
+        // Alert with more details
+        alert('Plugin Error:\n\n' + msg.error + '\n\n' + (msg.errorDetails || 'Check console for more details'));
+      }
+    };
+  </script>
+</body>
+</html>

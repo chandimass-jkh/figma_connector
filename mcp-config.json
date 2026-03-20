@@ -1,0 +1,6 @@
+{
+  "figma": {
+    "command": "node",
+    "args": ["/Users/sen/workspace/claude_figma/index.js"]
+  }
+}

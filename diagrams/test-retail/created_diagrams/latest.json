@@ -1,0 +1,128 @@
+{
+  "title": "Retail Sales Data Warehouse - Star Schema",
+  "type": "er-diagram",
+  "created": "2026-03-20T02:14:14.213Z",
+  "nodes": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Retail Sales Data Warehouse - Star Schema",
+      "x": 400,
+      "y": 10,
+      "width": 680,
+      "height": 30
+    },
+    {
+      "id": "fact_sales",
+      "type": "rectangle",
+      "label": "📊 FactSales\n━━━━━━━━━━━━━━━━━━━━━━━━━\nSaleID (PK)\nDateKey (FK)\nCustomerKey (FK)\nProductKey (FK)\nStoreKey (FK)\n━━━━━━━━━━━━━━━━━━━━━━━━━\nTransactionDate\nQuantity\nUnitPrice\nTotalAmount\nDiscountAmount\nTaxAmount\n... (+3 more)",
+      "x": 600,
+      "y": 500,
+      "width": 280,
+      "height": 380,
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "dim_date",
+      "type": "rectangle",
+      "label": "📅 DimDate\n━━━━━━━━━━━━━━━━━━━━━━━━━\nDateKey (PK)\nDate\nYear\nQuarter\nQuarterName\nMonth\nMonthName\n... (+7 more)",
+      "x": 600,
+      "y": 50,
+      "width": 280,
+      "height": 330,
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "dim_customer",
+      "type": "rectangle",
+      "label": "👤 DimCustomer\n━━━━━━━━━━━━━━━━━━━━━━━━━\nCustomerKey (PK)\nCustomerID\nFirstName\nLastName\nEmail\nPhone\nDateOfBirth\n... (+7 more)",
+      "x": 100,
+      "y": 400,
+      "width": 280,
+      "height": 350,
+      "color": "#95E1D3"
+    },
+    {
+      "id": "dim_product",
+      "type": "rectangle",
+      "label": "📦 DimProduct\n━━━━━━━━━━━━━━━━━━━━━━━━━\nProductKey (PK)\nProductID\nProductName\nDescription\nCategory\nSubCategory\nBrand\n... (+7 more)",
+      "x": 1100,
+      "y": 400,
+      "width": 280,
+      "height": 350,
+      "color": "#F8B500"
+    },
+    {
+      "id": "dim_store",
+      "type": "rectangle",
+      "label": "🏪 DimStore\n━━━━━━━━━━━━━━━━━━━━━━━━━\nStoreKey (PK)\nStoreID\nStoreName\nStoreType\nAddress\nCity\nState\n... (+5 more)",
+      "x": 600,
+      "y": 1000,
+      "width": 280,
+      "height": 320,
+      "color": "#A8E6CF"
+    },
+    {
+      "id": "legend_fact",
+      "type": "sticky",
+      "label": "📊 FACT TABLE\n━━━━━━━━━━━━━━━━\n• Contains measurable metrics\n• Granularity: One row per transaction\n• Measures: Quantity, Amount, Profit\n• Foreign keys to all dimensions",
+      "x": 50,
+      "y": 50,
+      "width": 220,
+      "height": 140,
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "legend_dim",
+      "type": "sticky",
+      "label": "📋 DIMENSION TABLES\n━━━━━━━━━━━━━━━━\n• Descriptive attributes\n• Who: Customer\n• What: Product\n• When: Date\n• Where: Store",
+      "x": 50,
+      "y": 210,
+      "width": 220,
+      "height": 140,
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "legend_keys",
+      "type": "sticky",
+      "label": "🔑 KEY TYPES\n━━━━━━━━━━━━━━━━\nPK = Primary Key\nFK = Foreign Key\n\n💡 Star Schema Benefits:\n• Simple queries\n• Fast aggregations\n• Easy to understand",
+      "x": 1210,
+      "y": 50,
+      "width": 220,
+      "height": 160,
+      "color": "#FFE66D"
+    },
+    {
+      "id": "analytics_note",
+      "type": "sticky",
+      "label": "📈 COMMON ANALYTICS\n━━━━━━━━━━━━━━━━\n• Sales by time period\n• Top customers/products\n• Store performance\n• Profit margins\n• Regional trends\n• Customer segmentation",
+      "x": 1210,
+      "y": 230,
+      "width": 220,
+      "height": 160,
+      "color": "#B4F8C8"
+    }
+  ],
+  "connections": [
+    {
+      "from": "dim_date",
+      "to": "fact_sales",
+      "label": "1:N"
+    },
+    {
+      "from": "dim_customer",
+      "to": "fact_sales",
+      "label": "1:N"
+    },
+    {
+      "from": "dim_product",
+      "to": "fact_sales",
+      "label": "1:N"
+    },
+    {
+      "from": "dim_store",
+      "to": "fact_sales",
+      "label": "1:N"
+    }
+  ]
+}

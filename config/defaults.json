@@ -1,0 +1,68 @@
+{
+  "canvas": {
+    "width": 1600,
+    "height": 1600,
+    "padding": 50
+  },
+  "colors": {
+    "factTable": "#FF6B6B",
+    "dimensionTable": "#4ECDC4",
+    "alternativeDimension": "#95E1D3",
+    "product": "#F8B500",
+    "store": "#A8E6CF",
+    "legend": "#FFE66D",
+    "note": "#B4F8C8",
+    "flowchartStart": "#4ECDC4",
+    "flowchartProcess": "#95E1D3",
+    "flowchartDecision": "#F8B500",
+    "flowchartEnd": "#FF6B6B",
+    "architectureLayer1": "#764ba2",
+    "architectureLayer2": "#667eea",
+    "architectureLayer3": "#f093fb"
+  },
+  "spacing": {
+    "tableHorizontal": 200,
+    "tableVertical": 100,
+    "flowchartVertical": 150,
+    "componentHorizontal": 150,
+    "componentVertical": 100
+  },
+  "sizes": {
+    "table": {
+      "width": 280,
+      "height": 320
+    },
+    "sticky": {
+      "width": 220,
+      "height": 140
+    },
+    "flowchartNode": {
+      "width": 200,
+      "height": 80
+    },
+    "component": {
+      "width": 200,
+      "height": 100
+    }
+  },
+  "fonts": {
+    "title": {
+      "family": "Inter",
+      "style": "Bold",
+      "size": 24
+    },
+    "table": {
+      "family": "Inter",
+      "style": "Regular",
+      "size": 14
+    },
+    "sticky": {
+      "family": "Inter",
+      "style": "Medium",
+      "size": 12
+    }
+  },
+  "figma": {
+    "boardUrl": "https://www.figma.com/board/ht9CrCOgT7sZpKyopJpHXN/claude-test"
+  }
+}

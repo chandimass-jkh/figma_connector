@@ -1,0 +1,187 @@
+{
+  "title": "Retail Sales Data Warehouse - Star Schema",
+  "type": "er-diagram",
+  "tables": [
+    {
+      "id": "fact_sales",
+      "name": "FactSales",
+      "emoji": "📊",
+      "visualType": "rectangle",
+      "x": 600,
+      "y": 500,
+      "width": 280,
+      "height": 380,
+      "color": "#FF6B6B",
+      "columns": [
+        { "name": "SaleID", "constraint": "PK" },
+        { "name": "DateKey", "constraint": "FK" },
+        { "name": "CustomerKey", "constraint": "FK" },
+        { "name": "ProductKey", "constraint": "FK" },
+        { "name": "StoreKey", "constraint": "FK" },
+        { "name": "TransactionDate" },
+        { "name": "Quantity" },
+        { "name": "UnitPrice" },
+        { "name": "TotalAmount" },
+        { "name": "DiscountAmount" },
+        { "name": "TaxAmount" },
+        { "name": "NetAmount" },
+        { "name": "CostAmount" },
+        { "name": "ProfitAmount" }
+      ]
+    },
+    {
+      "id": "dim_date",
+      "name": "DimDate",
+      "emoji": "📅",
+      "visualType": "rectangle",
+      "x": 600,
+      "y": 50,
+      "width": 280,
+      "height": 330,
+      "color": "#4ECDC4",
+      "columns": [
+        { "name": "DateKey", "constraint": "PK" },
+        { "name": "Date" },
+        { "name": "Year" },
+        { "name": "Quarter" },
+        { "name": "QuarterName" },
+        { "name": "Month" },
+        { "name": "MonthName" },
+        { "name": "Week" },
+        { "name": "DayOfWeek" },
+        { "name": "DayName" },
+        { "name": "DayOfMonth" },
+        { "name": "DayOfYear" },
+        { "name": "IsWeekend" },
+        { "name": "IsHoliday" }
+      ]
+    },
+    {
+      "id": "dim_customer",
+      "name": "DimCustomer",
+      "emoji": "👤",
+      "visualType": "rectangle",
+      "x": 100,
+      "y": 400,
+      "width": 280,
+      "height": 350,
+      "color": "#95E1D3",
+      "columns": [
+        { "name": "CustomerKey", "constraint": "PK" },
+        { "name": "CustomerID" },
+        { "name": "FirstName" },
+        { "name": "LastName" },
+        { "name": "Email" },
+        { "name": "Phone" },
+        { "name": "DateOfBirth" },
+        { "name": "Gender" },
+        { "name": "Address" },
+        { "name": "City" },
+        { "name": "State" },
+        { "name": "Country" },
+        { "name": "PostalCode" },
+        { "name": "CustomerSince" }
+      ]
+    },
+    {
+      "id": "dim_product",
+      "name": "DimProduct",
+      "emoji": "📦",
+      "visualType": "rectangle",
+      "x": 1100,
+      "y": 400,
+      "width": 280,
+      "height": 350,
+      "color": "#F8B500",
+      "columns": [
+        { "name": "ProductKey", "constraint": "PK" },
+        { "name": "ProductID" },
+        { "name": "ProductName" },
+        { "name": "Description" },
+        { "name": "Category" },
+        { "name": "SubCategory" },
+        { "name": "Brand" },
+        { "name": "Manufacturer" },
+        { "name": "UnitCost" },
+        { "name": "UnitPrice" },
+        { "name": "SKU" },
+        { "name": "Barcode" },
+        { "name": "Weight" },
+        { "name": "Dimensions" }
+      ]
+    },
+    {
+      "id": "dim_store",
+      "name": "DimStore",
+      "emoji": "🏪",
+      "visualType": "rectangle",
+      "x": 600,
+      "y": 1000,
+      "width": 280,
+      "height": 320,
+      "color": "#A8E6CF",
+      "columns": [
+        { "name": "StoreKey", "constraint": "PK" },
+        { "name": "StoreID" },
+        { "name": "StoreName" },
+        { "name": "StoreType" },
+        { "name": "Address" },
+        { "name": "City" },
+        { "name": "State" },
+        { "name": "Country" },
+        { "name": "PostalCode" },
+        { "name": "Phone" },
+        { "name": "Manager" },
+        { "name": "OpenDate" }
+      ]
+    }
+  ],
+  "relationships": [
+    { "from": "dim_date", "to": "fact_sales", "type": "1:N", "label": "1:N" },
+    { "from": "dim_customer", "to": "fact_sales", "type": "1:N", "label": "1:N" },
+    { "from": "dim_product", "to": "fact_sales", "type": "1:N", "label": "1:N" },
+    { "from": "dim_store", "to": "fact_sales", "type": "1:N", "label": "1:N" }
+  ],
+  "annotations": [
+    {
+      "id": "legend_fact",
+      "type": "sticky",
+      "label": "📊 FACT TABLE\n━━━━━━━━━━━━━━━━\n• Contains measurable metrics\n• Granularity: One row per transaction\n• Measures: Quantity, Amount, Profit\n• Foreign keys to all dimensions",
+      "x": 50,
+      "y": 50,
+      "width": 220,
+      "height": 140,
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "legend_dim",
+      "type": "sticky",
+      "label": "📋 DIMENSION TABLES\n━━━━━━━━━━━━━━━━\n• Descriptive attributes\n• Who: Customer\n• What: Product\n• When: Date\n• Where: Store",
+      "x": 50,
+      "y": 210,
+      "width": 220,
+      "height": 140,
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "legend_keys",
+      "type": "sticky",
+      "label": "🔑 KEY TYPES\n━━━━━━━━━━━━━━━━\nPK = Primary Key\nFK = Foreign Key\n\n💡 Star Schema Benefits:\n• Simple queries\n• Fast aggregations\n• Easy to understand",
+      "x": 1210,
+      "y": 50,
+      "width": 220,
+      "height": 160,
+      "color": "#FFE66D"
+    },
+    {
+      "id": "analytics_note",
+      "type": "sticky",
+      "label": "📈 COMMON ANALYTICS\n━━━━━━━━━━━━━━━━\n• Sales by time period\n• Top customers/products\n• Store performance\n• Profit margins\n• Regional trends\n• Customer segmentation",
+      "x": 1210,
+      "y": 230,
+      "width": 220,
+      "height": 160,
+      "color": "#B4F8C8"
+    }
+  ]
+}
