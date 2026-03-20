@@ -320,14 +320,26 @@
           select.remove(2);
         }
 
-        msg.diagrams.forEach(name => {
+        if (msg.error) {
+          showStatus(`⚠️ ${msg.error}`, 'error');
+          return;
+        }
+
+        msg.diagrams.forEach(diagram => {
           const option = document.createElement('option');
-          option.value = name;
-          option.textContent = name;
+          option.value = diagram.name;
+          const displayText = diagram.title || diagram.name;
+          const counts = `(${diagram.nodeCount || 0} nodes, ${diagram.connectionCount || 0} connections)`;
+          option.textContent = `${displayText} ${counts}`;
           select.appendChild(option);
         });
 
-        showStatus(`✅ Found ${msg.diagrams.length} diagrams`, 'success');
+        const count = msg.diagrams.length;
+        if (count > 0) {
+          showStatus(`✅ Found ${count} diagram(s) from server`, 'success');
+        } else {
+          showStatus('ℹ️ No diagrams found. Generate some first!', 'info');
+        }
       } else if (msg.type === 'creation-success') {
         showStatus('✅ Diagram created successfully!', 'success');
         setTimeout(() => {

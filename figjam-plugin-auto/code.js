@@ -300,21 +300,59 @@ figma.ui.onmessage = async (msg) => {
     });
 
   } else if (msg.type === 'load-diagram') {
-    // In future: load from file system via API
-    // For now, just acknowledge
-    figma.notify('⚠️ Loading custom diagrams not yet implemented', { error: false });
-    figma.ui.postMessage({
-      type: 'creation-error',
-      error: 'Custom diagram loading requires file system access (coming soon)'
-    });
+    // Load diagram from local server
+    try {
+      const diagramName = msg.diagramName;
+      const response = await fetch(`http://localhost:3456/api/diagrams/${diagramName}`);
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
+      const data = await response.json();
+      figma.ui.postMessage({
+        type: 'diagram-loaded',
+        diagram: data.diagram
+      });
+    } catch (error) {
+      console.error('Error loading diagram:', error);
+      figma.notify('⚠️ Make sure diagram server is running: npm run diagram-server', { error: true });
+      figma.ui.postMessage({
+        type: 'creation-error',
+        error: `Failed to load diagram: ${error.message}\n\nStart the server: npm run diagram-server`
+      });
+    }
 
   } else if (msg.type === 'refresh-diagrams') {
-    // In future: scan diagrams directory
-    // For now, return empty list (only hardcoded available)
-    figma.ui.postMessage({
-      type: 'diagrams-list',
-      diagrams: []
-    });
+    // Fetch diagram list from local server
+    try {
+      const response = await fetch('http://localhost:3456/api/diagrams');
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
+      const data = await response.json();
+      const diagramNames = data.diagrams.map(d => ({
+        name: d.name,
+        title: d.title,
+        nodeCount: d.nodeCount,
+        connectionCount: d.connectionCount
+      }));
+
+      figma.ui.postMessage({
+        type: 'diagrams-list',
+        diagrams: diagramNames
+      });
+    } catch (error) {
+      console.error('Error fetching diagrams:', error);
+      figma.notify('⚠️ Make sure diagram server is running: npm run diagram-server', { error: true });
+      figma.ui.postMessage({
+        type: 'diagrams-list',
+        diagrams: [],
+        error: `Server not running. Start with: npm run diagram-server`
+      });
+    }
 
   } else if (msg.type === 'create-diagram') {
     try {
