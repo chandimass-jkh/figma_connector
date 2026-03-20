@@ -1,0 +1,210 @@
+{
+  "title": "Healthcare Analytics - Constellation Schema (2 Facts + 4 Dimensions)",
+  "type": "er-diagram",
+  "tables": [
+    {
+      "id": "fact_patient_visits",
+      "name": "FactPatientVisits",
+      "emoji": "🏥",
+      "visualType": "rectangle",
+      "x": 400,
+      "y": 500,
+      "width": 280,
+      "height": 340,
+      "color": "#FF6B6B",
+      "columns": [
+        { "name": "VisitID", "constraint": "PK" },
+        { "name": "DateKey", "constraint": "FK" },
+        { "name": "PatientKey", "constraint": "FK" },
+        { "name": "DoctorKey", "constraint": "FK" },
+        { "name": "FacilityKey", "constraint": "FK" },
+        { "name": "VisitType" },
+        { "name": "Duration" },
+        { "name": "WaitTime" },
+        { "name": "TotalCharge" },
+        { "name": "InsurancePaid" },
+        { "name": "PatientPaid" },
+        { "name": "Diagnosis" }
+      ]
+    },
+    {
+      "id": "fact_prescriptions",
+      "name": "FactPrescriptions",
+      "emoji": "💊",
+      "visualType": "rectangle",
+      "x": 900,
+      "y": 500,
+      "width": 280,
+      "height": 300,
+      "color": "#E74C3C",
+      "columns": [
+        { "name": "PrescriptionID", "constraint": "PK" },
+        { "name": "DateKey", "constraint": "FK" },
+        { "name": "PatientKey", "constraint": "FK" },
+        { "name": "DoctorKey", "constraint": "FK" },
+        { "name": "MedicationName" },
+        { "name": "Dosage" },
+        { "name": "Quantity" },
+        { "name": "RefillsAllowed" },
+        { "name": "TotalCost" },
+        { "name": "CopayAmount" }
+      ]
+    },
+    {
+      "id": "dim_date",
+      "name": "DimDate",
+      "emoji": "📅",
+      "visualType": "rectangle",
+      "x": 650,
+      "y": 50,
+      "width": 280,
+      "height": 300,
+      "color": "#4ECDC4",
+      "columns": [
+        { "name": "DateKey", "constraint": "PK" },
+        { "name": "Date" },
+        { "name": "Year" },
+        { "name": "Quarter" },
+        { "name": "Month" },
+        { "name": "MonthName" },
+        { "name": "Week" },
+        { "name": "DayOfWeek" },
+        { "name": "DayName" },
+        { "name": "IsWeekend" },
+        { "name": "IsHoliday" }
+      ]
+    },
+    {
+      "id": "dim_patient",
+      "name": "DimPatient",
+      "emoji": "👤",
+      "visualType": "rectangle",
+      "x": 50,
+      "y": 450,
+      "width": 260,
+      "height": 320,
+      "color": "#95E1D3",
+      "columns": [
+        { "name": "PatientKey", "constraint": "PK" },
+        { "name": "PatientID" },
+        { "name": "FirstName" },
+        { "name": "LastName" },
+        { "name": "DateOfBirth" },
+        { "name": "Gender" },
+        { "name": "BloodType" },
+        { "name": "Phone" },
+        { "name": "Email" },
+        { "name": "City" },
+        { "name": "State" },
+        { "name": "InsuranceProvider" }
+      ]
+    },
+    {
+      "id": "dim_doctor",
+      "name": "DimDoctor",
+      "emoji": "👨‍⚕️",
+      "visualType": "rectangle",
+      "x": 650,
+      "y": 1000,
+      "width": 280,
+      "height": 300,
+      "color": "#F8B500",
+      "columns": [
+        { "name": "DoctorKey", "constraint": "PK" },
+        { "name": "DoctorID" },
+        { "name": "FirstName" },
+        { "name": "LastName" },
+        { "name": "Specialty" },
+        { "name": "LicenseNumber" },
+        { "name": "Phone" },
+        { "name": "Email" },
+        { "name": "YearsExperience" },
+        { "name": "Department" }
+      ]
+    },
+    {
+      "id": "dim_facility",
+      "name": "DimFacility",
+      "emoji": "🏥",
+      "visualType": "rectangle",
+      "x": 1280,
+      "y": 450,
+      "width": 280,
+      "height": 300,
+      "color": "#A8E6CF",
+      "columns": [
+        { "name": "FacilityKey", "constraint": "PK" },
+        { "name": "FacilityID" },
+        { "name": "FacilityName" },
+        { "name": "FacilityType" },
+        { "name": "Address" },
+        { "name": "City" },
+        { "name": "State" },
+        { "name": "Phone" },
+        { "name": "Beds" },
+        { "name": "OpenDate" }
+      ]
+    }
+  ],
+  "relationships": [
+    { "from": "dim_date", "to": "fact_patient_visits", "type": "1:N", "label": "1:N" },
+    { "from": "dim_patient", "to": "fact_patient_visits", "type": "1:N", "label": "1:N" },
+    { "from": "dim_doctor", "to": "fact_patient_visits", "type": "1:N", "label": "1:N" },
+    { "from": "dim_facility", "to": "fact_patient_visits", "type": "1:N", "label": "1:N" },
+    { "from": "dim_date", "to": "fact_prescriptions", "type": "1:N", "label": "1:N" },
+    { "from": "dim_patient", "to": "fact_prescriptions", "type": "1:N", "label": "1:N" },
+    { "from": "dim_doctor", "to": "fact_prescriptions", "type": "1:N", "label": "1:N" }
+  ],
+  "annotations": [
+    {
+      "id": "legend_constellation",
+      "type": "sticky",
+      "label": "🏥 HEALTHCARE CONSTELLATION\n━━━━━━━━━━━━━━━━━━━━\nMultiple fact tables sharing\ncommon dimension tables\n\n🏥 FactPatientVisits\n💊 FactPrescriptions",
+      "x": 50,
+      "y": 50,
+      "width": 240,
+      "height": 160,
+      "color": "#FFE66D"
+    },
+    {
+      "id": "legend_facts",
+      "type": "sticky",
+      "label": "📊 FACT TABLES (2)\n━━━━━━━━━━━━━━━━━━━━\n• Patient visits & encounters\n• Medication prescriptions\n• Measurable healthcare metrics\n• Transaction-level detail",
+      "x": 50,
+      "y": 230,
+      "width": 240,
+      "height": 140,
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "legend_dims",
+      "type": "sticky",
+      "label": "📋 DIMENSION TABLES (4)\n━━━━━━━━━━━━━━━━━━━━\n👤 Who: Patient\n👨‍⚕️ Who: Doctor\n📅 When: Date\n🏥 Where: Facility\n\nShared across both facts!",
+      "x": 1320,
+      "y": 50,
+      "width": 240,
+      "height": 160,
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "analytics_note",
+      "type": "sticky",
+      "label": "📈 ANALYTICS USE CASES\n━━━━━━━━━━━━━━━━━━━━\n• Patient visit patterns\n• Prescription trends\n• Doctor performance\n• Facility utilization\n• Wait time analysis\n• Cost & revenue tracking",
+      "x": 1320,
+      "y": 230,
+      "width": 240,
+      "height": 160,
+      "color": "#B4F8C8"
+    },
+    {
+      "id": "keys_note",
+      "type": "sticky",
+      "label": "🔑 SCHEMA DESIGN\n━━━━━━━━━━━━━━━━━━━━\nPK = Primary Key\nFK = Foreign Key\n\n✨ Constellation Benefits:\n• Cross-fact analysis\n• Consistent dimensions\n• Flexible reporting\n• Reduced redundancy",
+      "x": 650,
+      "y": 1350,
+      "width": 280,
+      "height": 160,
+      "color": "#FFD3B6"
+    }
+  ]
+}

@@ -1,87 +1,144 @@
 # Claude Figma Diagram Generator
 
-Automatically create professional diagrams in FigJam using Claude AI through natural language descriptions.
+Automatically create professional diagrams in FigJam using Claude AI with **fully automated workflow**.
 
-## Features
+## 🌟 What Makes This Special
 
-- **ER Diagrams** - Database schemas, star schemas, snowflake schemas
-- **Flowcharts** - Process flows, workflows, decision trees
-- **Architecture Diagrams** - System architecture, microservices, infrastructure
-- **Natural Language Interface** - Describe your diagram, Claude creates it
-- **Automatic Creation** - Diagrams appear directly in FigJam (no manual import)
+✨ **Fully Automated** - Just ask Claude, diagrams appear in FigJam
+🔄 **Real-time Refresh** - New diagrams show instantly in plugin
+🎯 **No Manual Copying** - HTTP server handles everything
+📊 **Multiple Diagram Types** - ER, flowcharts, architecture
+🚀 **Constellation Schemas** - 2+ fact tables, shared dimensions
+🎨 **Professional Quality** - Color-coded, annotated, publication-ready
 
-## Quick Start
+## Quick Start (3 Steps)
 
-### 1. Setup
+### 1. Start the Diagram Server
 
 ```bash
-# Install dependencies
-npm install
-
-# Create .env file with your Figma Personal Access Token
-echo "FIGMA_ACCESS_TOKEN=your_token_here" > .env
+npm install  # One-time only
+npm run diagram-server
 ```
+
+**Keep this running!** The server automatically detects new diagrams.
 
 ### 2. Install FigJam Plugin
 
-1. Open FigJam Desktop App
-2. Navigate to **Plugins** → **Development** → **Import plugin from manifest**
-3. Select `figjam-plugin-auto/manifest.json`
-4. Plugin name: **Claude ER Diagram Auto-Creator**
+1. Open **Figma Desktop App** (not browser)
+2. **Menu** → **Plugins** → **Development** → **Import plugin from manifest**
+3. Select: `figjam-plugin-auto/manifest.json`
 
-### 3. Generate Your First Diagram
+### 3. Create Your First Diagram
 
-```bash
-# Using a template
-npm run generate -- --template er-star-schema --name retail-sales
+Ask Claude: *"Create an ER diagram for e-commerce with orders and returns"*
 
-# From custom spec file
-npm run generate -- --type er-diagram --name my-db --spec spec.json
+Claude will:
+- ✅ Create the specification
+- ✅ Generate the diagram
+- ✅ Verify server detection
+- ✅ Give you FigJam instructions
+
+Then in FigJam:
+1. Run plugin: **Claude ER Diagram Auto-Creator**
+2. Click **🔄 Refresh List**
+3. Select your diagram
+4. Click **✨ Create Diagram**
+5. Done! 🎉
+
+## See Full Guide
+
+📖 **[QUICK_START.md](QUICK_START.md)** - 5-minute getting started guide
+
+## How It Works
+
+```
+User Request ──> Claude ──> Generator ──> HTTP Server ──> FigJam Plugin
+    "Create           Creates      Saves to       Auto-scans      Fetches &
+   ER diagram"       spec.json    diagrams/       new files       displays
+                                   folder                         in FigJam
 ```
 
-### 4. View in FigJam
+### The Magic: No Manual Steps!
 
-1. Open [FigJam Board](https://www.figma.com/board/ht9CrCOgT7sZpKyopJpHXN/claude-test)
-2. Run plugin: **Claude ER Diagram Auto-Creator**
-3. Your diagram appears automatically!
+1. **Ask Claude** - Natural language request
+2. **Auto-generate** - Spec created, diagram generated
+3. **Auto-detect** - Server finds new diagram (no restart)
+4. **Auto-refresh** - Plugin shows it in dropdown
+5. **One-click create** - Appears in FigJam instantly
+
+## Available Diagrams (3)
+
+### 1. Healthcare Analytics
+- **2 Facts:** Patient Visits, Prescriptions
+- **4 Dimensions:** Date, Patient, Doctor, Facility
+- **Use Case:** Hospital analytics, patient trends
+
+### 2. Data Warehouse (Retail)
+- **2 Facts:** Sales, Inventory
+- **4 Dimensions:** Date, Customer, Product, Store
+- **Use Case:** Stock optimization, demand forecasting
+
+### 3. E-Commerce Analytics
+- **2 Facts:** Orders, Returns
+- **4 Dimensions:** Date, Customer, Product, Shipping
+- **Use Case:** Return rate analysis, revenue tracking
+
+All are **constellation schemas** (2 facts + 4 shared dimensions)
 
 ## Project Structure
 
 ```
 claude_figma/
+├── diagram-server.js              # HTTP server (port 3456)
 ├── src/
 │   ├── core/
-│   │   ├── diagram-generator.js    # Core generation logic
-│   │   └── figma-client.js         # Figma API client
+│   │   ├── diagram-generator.js   # Core generation logic
+│   │   └── figma-client.js        # Figma API client
 │   ├── generators/
-│   │   └── generate.js             # CLI tool
+│   │   └── generate.js            # CLI generator
 │   └── templates/
-│       └── er-star-schema.json     # Pre-built templates
-├── diagrams/
-│   └── <diagram-name>/
-│       ├── inputs/                 # Input specifications
-│       └── created_diagrams/       # Generated outputs
-│           ├── latest.json         # Most recent version
-│           └── <name>_<timestamp>.json
+│       └── er-star-schema.json    # Pre-built template
+├── diagrams/                      # Generated diagrams
+│   ├── healthcare-analytics/
+│   ├── data-warehouse-2facts/
+│   └── ecommerce-analytics/
+│       ├── inputs/
+│       │   └── spec.json          # Input specification (tracked in git)
+│       └── created_diagrams/
+│           └── latest.json        # Generated output (not tracked)
+├── figjam-plugin-auto/            # FigJam plugin with refresh
+│   ├── manifest.json
+│   ├── code.js                    # Fetches from localhost:3456
+│   └── ui.html                    # Dropdown + paste JSON
 ├── config/
-│   └── defaults.json               # Default settings
-├── skills/
-│   └── create-diagram.md           # Claude Code skill
-└── figjam-plugin-auto/
-    ├── manifest.json               # Plugin manifest
-    ├── code.js                     # Plugin logic
-    └── ui.html                     # Plugin UI
+│   └── defaults.json              # Default colors, spacing, fonts
+└── skills/
+    ├── create-diagram.md          # Main skill (v2.0 - automated)
+    └── generate-diagram.md        # CLI reference
 ```
 
 ## Usage
 
-### Generate from Template
+### Method 1: Ask Claude (Recommended)
+
+Just describe what you want:
+```
+"Create an ER diagram for a university database with students, courses, and enrollments"
+"Make a constellation schema for financial analytics with transactions and budgets"
+"Design an architecture diagram with microservices and API gateway"
+```
+
+Claude handles everything automatically!
+
+### Method 2: Generate Manually
+
+#### From Template
 
 ```bash
 npm run generate -- --template er-star-schema --name my-diagram
 ```
 
-### Generate from Spec File
+#### From Spec File
 
 Create an input spec in `diagrams/<name>/inputs/spec.json`:
 
@@ -117,9 +174,42 @@ Then generate:
 npm run generate -- --type er-diagram --name my-db --spec spec.json
 ```
 
+## Diagram Server
+
+The HTTP server makes everything automatic:
+
+```bash
+# Start once per session
+npm run diagram-server
+```
+
+**Features:**
+- 🔍 Auto-scans `diagrams/` folder
+- 🚀 Serves via HTTP API (localhost:3456)
+- 🔄 No restart needed for new diagrams
+- 📡 Plugin fetches on refresh
+
+**API Endpoints:**
+- `GET /health` - Server status
+- `GET /api/diagrams` - List all diagrams
+- `GET /api/diagrams/:name` - Get specific diagram
+- `GET /api/diagrams/:name/versions` - List versions
+
+📖 See [DIAGRAM_SERVER.md](DIAGRAM_SERVER.md) for full documentation
+
 ## Claude Code Integration
 
-This project includes a Claude Code skill for seamless diagram creation. The skill is located at [skills/create-diagram.md](skills/create-diagram.md).
+**Version 2.0** - Fully automated workflow!
+
+The skill automatically:
+1. ✅ Checks if server is running
+2. ✅ Starts it if needed
+3. ✅ Creates diagram specification
+4. ✅ Generates the diagram
+5. ✅ Verifies server detection
+6. ✅ Provides complete instructions
+
+📖 See [skills/create-diagram.md](skills/create-diagram.md) for full skill documentation
 
 ## Configuration
 

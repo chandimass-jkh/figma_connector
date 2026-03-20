@@ -7,14 +7,22 @@
   "scripts": {
     "start": "node index.js",
     "generate": "node src/generators/generate.js",
-    "test-figma": "node src/test-connection.js"
+    "test-figma": "node src/test-connection.js",
+    "diagram-server": "node diagram-server.js"
   },
-  "keywords": ["figma", "mcp", "claude", "diagrams"],
+  "keywords": [
+    "figma",
+    "mcp",
+    "claude",
+    "diagrams"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
     "axios": "^1.7.9",
-    "dotenv": "^16.4.7"
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.7",
+    "express": "^4.22.1"
   }
 }

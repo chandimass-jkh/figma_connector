@@ -1,0 +1,211 @@
+{
+  "title": "E-Commerce Analytics - Constellation Schema (2 Facts + 4 Dimensions)",
+  "type": "er-diagram",
+  "tables": [
+    {
+      "id": "fact_orders",
+      "name": "FactOrders",
+      "emoji": "🛒",
+      "visualType": "rectangle",
+      "x": 400,
+      "y": 500,
+      "width": 280,
+      "height": 340,
+      "color": "#FF6B6B",
+      "columns": [
+        { "name": "OrderID", "constraint": "PK" },
+        { "name": "DateKey", "constraint": "FK" },
+        { "name": "CustomerKey", "constraint": "FK" },
+        { "name": "ProductKey", "constraint": "FK" },
+        { "name": "ShippingKey", "constraint": "FK" },
+        { "name": "OrderNumber" },
+        { "name": "Quantity" },
+        { "name": "UnitPrice" },
+        { "name": "Subtotal" },
+        { "name": "DiscountAmount" },
+        { "name": "ShippingCost" },
+        { "name": "TaxAmount" }
+      ]
+    },
+    {
+      "id": "fact_returns",
+      "name": "FactReturns",
+      "emoji": "↩️",
+      "visualType": "rectangle",
+      "x": 900,
+      "y": 500,
+      "width": 280,
+      "height": 320,
+      "color": "#E74C3C",
+      "columns": [
+        { "name": "ReturnID", "constraint": "PK" },
+        { "name": "DateKey", "constraint": "FK" },
+        { "name": "CustomerKey", "constraint": "FK" },
+        { "name": "ProductKey", "constraint": "FK" },
+        { "name": "OrderID", "constraint": "FK" },
+        { "name": "ReturnReason" },
+        { "name": "ReturnQuantity" },
+        { "name": "RefundAmount" },
+        { "name": "RestockingFee" },
+        { "name": "ProcessingCost" }
+      ]
+    },
+    {
+      "id": "dim_date",
+      "name": "DimDate",
+      "emoji": "📅",
+      "visualType": "rectangle",
+      "x": 650,
+      "y": 50,
+      "width": 280,
+      "height": 300,
+      "color": "#4ECDC4",
+      "columns": [
+        { "name": "DateKey", "constraint": "PK" },
+        { "name": "Date" },
+        { "name": "Year" },
+        { "name": "Quarter" },
+        { "name": "Month" },
+        { "name": "MonthName" },
+        { "name": "Week" },
+        { "name": "DayOfWeek" },
+        { "name": "DayName" },
+        { "name": "IsWeekend" },
+        { "name": "IsHoliday" }
+      ]
+    },
+    {
+      "id": "dim_customer",
+      "name": "DimCustomer",
+      "emoji": "👤",
+      "visualType": "rectangle",
+      "x": 50,
+      "y": 450,
+      "width": 260,
+      "height": 320,
+      "color": "#95E1D3",
+      "columns": [
+        { "name": "CustomerKey", "constraint": "PK" },
+        { "name": "CustomerID" },
+        { "name": "FirstName" },
+        { "name": "LastName" },
+        { "name": "Email" },
+        { "name": "Phone" },
+        { "name": "DateOfBirth" },
+        { "name": "CustomerSince" },
+        { "name": "LoyaltyTier" },
+        { "name": "City" },
+        { "name": "State" },
+        { "name": "Country" }
+      ]
+    },
+    {
+      "id": "dim_product",
+      "name": "DimProduct",
+      "emoji": "📦",
+      "visualType": "rectangle",
+      "x": 650,
+      "y": 1000,
+      "width": 280,
+      "height": 320,
+      "color": "#F8B500",
+      "columns": [
+        { "name": "ProductKey", "constraint": "PK" },
+        { "name": "ProductID" },
+        { "name": "ProductName" },
+        { "name": "Description" },
+        { "name": "Category" },
+        { "name": "SubCategory" },
+        { "name": "Brand" },
+        { "name": "SKU" },
+        { "name": "UnitCost" },
+        { "name": "ListPrice" },
+        { "name": "Weight" }
+      ]
+    },
+    {
+      "id": "dim_shipping",
+      "name": "DimShipping",
+      "emoji": "🚚",
+      "visualType": "rectangle",
+      "x": 1280,
+      "y": 450,
+      "width": 280,
+      "height": 300,
+      "color": "#A8E6CF",
+      "columns": [
+        { "name": "ShippingKey", "constraint": "PK" },
+        { "name": "ShippingID" },
+        { "name": "CarrierName" },
+        { "name": "ShippingMethod" },
+        { "name": "ServiceLevel" },
+        { "name": "EstimatedDays" },
+        { "name": "TrackingEnabled" },
+        { "name": "InsuranceOffered" },
+        { "name": "BaseRate" },
+        { "name": "WeightRate" }
+      ]
+    }
+  ],
+  "relationships": [
+    { "from": "dim_date", "to": "fact_orders", "type": "1:N", "label": "1:N" },
+    { "from": "dim_customer", "to": "fact_orders", "type": "1:N", "label": "1:N" },
+    { "from": "dim_product", "to": "fact_orders", "type": "1:N", "label": "1:N" },
+    { "from": "dim_shipping", "to": "fact_orders", "type": "1:N", "label": "1:N" },
+    { "from": "dim_date", "to": "fact_returns", "type": "1:N", "label": "1:N" },
+    { "from": "dim_customer", "to": "fact_returns", "type": "1:N", "label": "1:N" },
+    { "from": "dim_product", "to": "fact_returns", "type": "1:N", "label": "1:N" }
+  ],
+  "annotations": [
+    {
+      "id": "legend_constellation",
+      "type": "sticky",
+      "label": "🛒 E-COMMERCE CONSTELLATION\n━━━━━━━━━━━━━━━━━━━━\nMultiple fact tables sharing\ncommon dimension tables\n\n🛒 FactOrders (Purchases)\n↩️ FactReturns (Refunds)",
+      "x": 50,
+      "y": 50,
+      "width": 240,
+      "height": 160,
+      "color": "#FFE66D"
+    },
+    {
+      "id": "legend_facts",
+      "type": "sticky",
+      "label": "📊 FACT TABLES (2)\n━━━━━━━━━━━━━━━━━━━━\n• Order transactions\n• Return transactions\n• Revenue & refund metrics\n• Product movement tracking",
+      "x": 50,
+      "y": 230,
+      "width": 240,
+      "height": 140,
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "legend_dims",
+      "type": "sticky",
+      "label": "📋 DIMENSION TABLES (4)\n━━━━━━━━━━━━━━━━━━━━\n👤 Who: Customer\n📦 What: Product\n📅 When: Date\n🚚 How: Shipping Method\n\nShared dimensions!",
+      "x": 1320,
+      "y": 50,
+      "width": 240,
+      "height": 160,
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "analytics_note",
+      "type": "sticky",
+      "label": "📈 BUSINESS INSIGHTS\n━━━━━━━━━━━━━━━━━━━━\n• Return rate by product\n• Customer lifetime value\n• Shipping performance\n• Revenue vs refunds\n• Product popularity\n• Seasonal trends",
+      "x": 1320,
+      "y": 230,
+      "width": 240,
+      "height": 160,
+      "color": "#B4F8C8"
+    },
+    {
+      "id": "keys_note",
+      "type": "sticky",
+      "label": "🔑 SCHEMA INSIGHTS\n━━━━━━━━━━━━━━━━━━━━\nPK = Primary Key\nFK = Foreign Key\n\n💡 Why Constellation?\n• Analyze order-return relationship\n• Track product quality issues\n• Optimize shipping choices\n• Reduce return costs",
+      "x": 650,
+      "y": 1350,
+      "width": 280,
+      "height": 160,
+      "color": "#FFD3B6"
+    }
+  ]
+}

@@ -130,7 +130,7 @@ const DIAGRAM_SPEC = {
   ]
 };
 
-figma.showUI(__html__, { width: 400, height: 300 });
+figma.showUI(__html__, { width: 400, height: 600 });
 
 function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -292,14 +292,93 @@ async function createDiagram(spec) {
 }
 
 figma.ui.onmessage = async (msg) => {
-  if (msg.type === 'create-diagram') {
+  if (msg.type === 'get-hardcoded-diagram') {
+    // Return the built-in diagram
+    figma.ui.postMessage({
+      type: 'diagram-loaded',
+      diagram: DIAGRAM_SPEC
+    });
+
+  } else if (msg.type === 'load-diagram') {
+    // Load diagram from local server
+    try {
+      const diagramName = msg.diagramName;
+      const response = await fetch(`http://localhost:3456/api/diagrams/${diagramName}`);
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
+      const data = await response.json();
+      figma.ui.postMessage({
+        type: 'diagram-loaded',
+        diagram: data.diagram
+      });
+    } catch (error) {
+      console.error('Error loading diagram:', error);
+      figma.notify('⚠️ Make sure diagram server is running: npm run diagram-server', { error: true });
+      figma.ui.postMessage({
+        type: 'creation-error',
+        error: `Failed to load diagram: ${error.message}\n\nStart the server: npm run diagram-server`
+      });
+    }
+
+  } else if (msg.type === 'refresh-diagrams') {
+    // Fetch diagram list from local server
+    try {
+      const response = await fetch('http://localhost:3456/api/diagrams');
+
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+
+      const data = await response.json();
+      const diagramNames = data.diagrams.map(d => ({
+        name: d.name,
+        title: d.title,
+        nodeCount: d.nodeCount,
+        connectionCount: d.connectionCount
+      }));
+
+      figma.ui.postMessage({
+        type: 'diagrams-list',
+        diagrams: diagramNames
+      });
+    } catch (error) {
+      console.error('Error fetching diagrams:', error);
+      figma.notify('⚠️ Make sure diagram server is running: npm run diagram-server', { error: true });
+      figma.ui.postMessage({
+        type: 'diagrams-list',
+        diagrams: [],
+        error: `Server not running. Start with: npm run diagram-server`
+      });
+    }
+
+  } else if (msg.type === 'create-diagram') {
     try {
       console.log('📋 Received create-diagram message');
-      await createDiagram(DIAGRAM_SPEC);
+
+      // Determine which diagram to create
+      let diagramSpec;
+      if (msg.diagram) {
+        // Custom diagram from JSON paste
+        diagramSpec = msg.diagram;
+        console.log('Using custom diagram from JSON');
+      } else if (msg.source === 'hardcoded') {
+        // Built-in diagram
+        diagramSpec = DIAGRAM_SPEC;
+        console.log('Using hardcoded diagram');
+      } else {
+        throw new Error('No diagram specification provided');
+      }
+
+      await createDiagram(diagramSpec);
       console.log('✅ Diagram created, sending success message');
       figma.ui.postMessage({ type: 'creation-success' });
+
       // Auto-close after 2 seconds
       setTimeout(() => figma.closePlugin(), 2000);
+
     } catch (error) {
       console.error('❌ Error caught in message handler:', error);
       console.error('Error type:', typeof error);
