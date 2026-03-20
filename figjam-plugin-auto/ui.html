@@ -1,183 +1,350 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <style>
     * {
-      margin: 0;
-      padding: 0;
       box-sizing: border-box;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      padding: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      height: 300px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .subtitle {
+      margin: 0;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 14px;
-      opacity: 0.9;
-      margin-bottom: 30px;
+      background: white;
+      width: 400px;
     }
 
-    .diagram-info {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
+    h3 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+    }
+
+    p {
+      margin: 0 0 16px 0;
+      color: #666;
+      line-height: 1.5;
       font-size: 13px;
     }
 
-    .diagram-info div {
-      margin: 5px 0;
+    .section {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #E5E5E5;
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #CCC;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+      margin-bottom: 12px;
+    }
+
+    select:focus, textarea:focus {
+      outline: none;
+      border-color: #18A0FB;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 11px;
     }
 
     button {
-      font-family: inherit;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 15px 40px;
+      width: 100%;
+      padding: 10px 16px;
+      margin-bottom: 8px;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 5px;
+      transition: all 0.2s;
     }
 
-    #create-btn {
-      background: white;
-      color: #667eea;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
-    #create-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    #create-btn:active {
-      transform: translateY(0);
-    }
-
-    #cancel-btn {
-      background: rgba(255, 255, 255, 0.2);
+    button.primary {
+      background: #18A0FB;
       color: white;
     }
 
-    #cancel-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
+    button.primary:hover:not(:disabled) {
+      background: #0D8AE0;
+    }
+
+    button.secondary {
+      background: #F0F0F0;
+      color: #333;
+    }
+
+    button.secondary:hover:not(:disabled) {
+      background: #E0E0E0;
+    }
+
+    button.small {
+      padding: 6px 12px;
+      font-size: 12px;
+      width: auto;
+      display: inline-block;
+      margin-right: 8px;
     }
 
     .status {
-      margin-top: 15px;
-      font-size: 14px;
-      min-height: 20px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      display: none;
     }
 
-    .success {
-      color: #4ade80;
+    .status.success {
+      background: #E8F5E9;
+      color: #2E7D32;
+      display: block;
     }
 
-    .error {
-      color: #ff6b6b;
+    .status.error {
+      background: #FFEBEE;
+      color: #C62828;
+      display: block;
     }
 
-    .loading {
-      display: inline-block;
-      animation: pulse 1.5s ease-in-out infinite;
+    .status.info {
+      background: #E3F2FD;
+      color: #1565C0;
+      display: block;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+    .diagram-info {
+      background: #F8F8F8;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .diagram-info strong {
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>
-      <span>🎨</span>
-      <span>ER Diagram Creator</span>
-    </h1>
-    <p class="subtitle">Retail Sales Data Warehouse - Star Schema</p>
+  <h3>🎨 Claude Diagram Creator</h3>
 
-    <div class="diagram-info">
-      <div>📊 5 Tables (1 Fact + 4 Dimensions)</div>
-      <div>🔗 4 Relationships</div>
-      <div>📝 4 Legend Sticky Notes</div>
-    </div>
+  <div id="status" class="status"></div>
 
-    <div>
-      <button id="create-btn">✨ Create Diagram</button>
-    </div>
-    <div>
-      <button id="cancel-btn">Cancel</button>
-    </div>
+  <!-- Option 1: Select from available diagrams -->
+  <div class="section">
+    <label>📂 Select Diagram:</label>
+    <select id="diagramSelect">
+      <option value="">-- Choose a diagram --</option>
+      <option value="hardcoded">Retail Sales Star Schema (Built-in)</option>
+    </select>
+    <div id="diagramInfo" class="diagram-info" style="display: none;"></div>
+    <button id="refreshBtn" class="secondary small">🔄 Refresh List</button>
+  </div>
 
-    <div id="status" class="status"></div>
+  <!-- Option 2: Paste custom JSON -->
+  <div class="section">
+    <label>📋 Or Paste Custom JSON:</label>
+    <textarea id="customJson" placeholder='{"title": "My Diagram", "nodes": [...], "connections": [...]}'></textarea>
+    <button id="validateBtn" class="secondary small">✓ Validate JSON</button>
+  </div>
+
+  <!-- Actions -->
+  <div class="section">
+    <button id="createBtn" class="primary">✨ Create Diagram</button>
+    <button id="cancelBtn" class="secondary">Cancel</button>
   </div>
 
   <script>
-    const createBtn = document.getElementById('create-btn');
-    const cancelBtn = document.getElementById('cancel-btn');
-    const status = document.getElementById('status');
+    const diagramSelect = document.getElementById('diagramSelect');
+    const customJson = document.getElementById('customJson');
+    const createBtn = document.getElementById('createBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const validateBtn = document.getElementById('validateBtn');
+    const statusDiv = document.getElementById('status');
+    const diagramInfo = document.getElementById('diagramInfo');
 
-    createBtn.onclick = () => {
+    let currentDiagram = null;
+
+    function showStatus(message, type = 'info') {
+      statusDiv.textContent = message;
+      statusDiv.className = `status ${type}`;
+    }
+
+    function showDiagramInfo(spec) {
+      if (!spec) {
+        diagramInfo.style.display = 'none';
+        return;
+      }
+
+      const nodeCount = spec.nodes ? spec.nodes.length : 0;
+      const connCount = spec.connections ? spec.connections.length : 0;
+
+      diagramInfo.innerHTML = `
+        <strong>${spec.title || 'Untitled'}</strong><br>
+        ${nodeCount} nodes, ${connCount} connections
+      `;
+      diagramInfo.style.display = 'block';
+    }
+
+    // Handle diagram selection
+    diagramSelect.addEventListener('change', (e) => {
+      const value = e.target.value;
+      customJson.value = '';
+
+      if (value === 'hardcoded') {
+        // Use built-in diagram
+        parent.postMessage({
+          pluginMessage: { type: 'get-hardcoded-diagram' }
+        }, '*');
+      } else if (value) {
+        // Request diagram from file system
+        parent.postMessage({
+          pluginMessage: { type: 'load-diagram', diagramName: value }
+        }, '*');
+      } else {
+        currentDiagram = null;
+        showDiagramInfo(null);
+      }
+    });
+
+    // Validate custom JSON
+    validateBtn.addEventListener('click', () => {
+      const jsonText = customJson.value.trim();
+      if (!jsonText) {
+        showStatus('⚠️ Please paste JSON first', 'error');
+        return;
+      }
+
+      try {
+        const spec = JSON.parse(jsonText);
+        if (!spec.nodes || !Array.isArray(spec.nodes)) {
+          throw new Error('Invalid diagram: missing "nodes" array');
+        }
+        currentDiagram = spec;
+        showStatus('✅ JSON is valid!', 'success');
+        showDiagramInfo(spec);
+        diagramSelect.value = '';
+      } catch (error) {
+        showStatus(`❌ Invalid JSON: ${error.message}`, 'error');
+        currentDiagram = null;
+      }
+    });
+
+    // Create diagram
+    createBtn.addEventListener('click', () => {
+      // Check if custom JSON is provided
+      const jsonText = customJson.value.trim();
+      if (jsonText) {
+        try {
+          currentDiagram = JSON.parse(jsonText);
+        } catch (error) {
+          showStatus('❌ Invalid JSON. Click "Validate JSON" first.', 'error');
+          return;
+        }
+      }
+
+      // Check if we have a diagram source
+      if (!currentDiagram && !diagramSelect.value) {
+        showStatus('⚠️ Please select a diagram or paste JSON', 'error');
+        return;
+      }
+
+      showStatus('⏳ Creating diagram...', 'info');
       createBtn.disabled = true;
-      createBtn.textContent = '⏳ Creating...';
-      status.innerHTML = '<span class="loading">Building your diagram...</span>';
-      parent.postMessage({ pluginMessage: { type: 'create-diagram' } }, '*');
-    };
 
-    cancelBtn.onclick = () => {
+      parent.postMessage({
+        pluginMessage: {
+          type: 'create-diagram',
+          diagram: currentDiagram,
+          source: diagramSelect.value || 'custom'
+        }
+      }, '*');
+    });
+
+    // Refresh diagram list
+    refreshBtn.addEventListener('click', () => {
+      showStatus('⏳ Refreshing...', 'info');
+      parent.postMessage({
+        pluginMessage: { type: 'refresh-diagrams' }
+      }, '*');
+    });
+
+    // Cancel
+    cancelBtn.addEventListener('click', () => {
       parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*');
-    };
+    });
 
+    // Listen for messages from plugin code
     window.onmessage = (event) => {
       const msg = event.data.pluginMessage;
+      if (!msg) return;
 
-      if (msg.type === 'creation-success') {
-        status.innerHTML = '<span class="success">✅ Diagram created successfully!</span>';
-        createBtn.textContent = '✅ Done!';
+      if (msg.type === 'diagram-loaded') {
+        currentDiagram = msg.diagram;
+        showStatus(`✅ Loaded: ${msg.diagram.title}`, 'success');
+        showDiagramInfo(msg.diagram);
+      } else if (msg.type === 'diagrams-list') {
+        // Update dropdown with available diagrams
+        const select = diagramSelect;
+        // Keep hardcoded option
+        while (select.options.length > 2) {
+          select.remove(2);
+        }
+
+        msg.diagrams.forEach(name => {
+          const option = document.createElement('option');
+          option.value = name;
+          option.textContent = name;
+          select.appendChild(option);
+        });
+
+        showStatus(`✅ Found ${msg.diagrams.length} diagrams`, 'success');
+      } else if (msg.type === 'creation-success') {
+        showStatus('✅ Diagram created successfully!', 'success');
+        setTimeout(() => {
+          createBtn.disabled = false;
+        }, 1000);
       } else if (msg.type === 'creation-error') {
-        console.error('❌ Plugin Error:', msg.error);
-        console.error('Error Details:', msg.errorDetails);
-        console.error('Stack Trace:', msg.errorStack);
-
-        const errorHtml = `
-          <span class="error">❌ Error: ${msg.error}</span>
-          <br><br>
-          <small style="opacity: 0.8;">
-            Open console (Cmd+Option+I) for full details
-          </small>
-        `;
-        status.innerHTML = errorHtml;
+        showStatus(`❌ Error: ${msg.error}`, 'error');
         createBtn.disabled = false;
-        createBtn.textContent = '🔄 Try Again';
 
-        // Alert with more details
-        alert('Plugin Error:\n\n' + msg.error + '\n\n' + (msg.errorDetails || 'Check console for more details'));
+        if (msg.errorDetails) {
+          console.error('Error details:', msg.errorDetails);
+        }
       }
     };
+
+    // Auto-refresh on load
+    setTimeout(() => refreshBtn.click(), 100);
   </script>
 </body>
 </html>
