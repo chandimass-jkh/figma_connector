@@ -6,9 +6,8 @@ dist/
 build/
 .DS_Store
 
-# Generated diagrams (outputs)
+# Generated diagrams (outputs only, keep input specs)
 diagrams/*/created_diagrams/
-diagrams/*/inputs/*.json
 
 # Claude settings (user-specific)
 .claude/

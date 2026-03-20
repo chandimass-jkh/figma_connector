@@ -1,0 +1,207 @@
+{
+  "title": "Data Warehouse - Constellation Schema (2 Facts + 4 Dimensions)",
+  "type": "er-diagram",
+  "tables": [
+    {
+      "id": "fact_sales",
+      "name": "FactSales",
+      "emoji": "💰",
+      "visualType": "rectangle",
+      "x": 400,
+      "y": 500,
+      "width": 280,
+      "height": 320,
+      "color": "#FF6B6B",
+      "columns": [
+        { "name": "SaleID", "constraint": "PK" },
+        { "name": "DateKey", "constraint": "FK" },
+        { "name": "CustomerKey", "constraint": "FK" },
+        { "name": "ProductKey", "constraint": "FK" },
+        { "name": "StoreKey", "constraint": "FK" },
+        { "name": "Quantity" },
+        { "name": "UnitPrice" },
+        { "name": "TotalAmount" },
+        { "name": "DiscountAmount" },
+        { "name": "TaxAmount" },
+        { "name": "ProfitAmount" }
+      ]
+    },
+    {
+      "id": "fact_inventory",
+      "name": "FactInventory",
+      "emoji": "📦",
+      "visualType": "rectangle",
+      "x": 900,
+      "y": 500,
+      "width": 280,
+      "height": 280,
+      "color": "#E74C3C",
+      "columns": [
+        { "name": "InventoryID", "constraint": "PK" },
+        { "name": "DateKey", "constraint": "FK" },
+        { "name": "ProductKey", "constraint": "FK" },
+        { "name": "StoreKey", "constraint": "FK" },
+        { "name": "QuantityOnHand" },
+        { "name": "QuantityReserved" },
+        { "name": "ReorderLevel" },
+        { "name": "TotalValue" }
+      ]
+    },
+    {
+      "id": "dim_date",
+      "name": "DimDate",
+      "emoji": "📅",
+      "visualType": "rectangle",
+      "x": 650,
+      "y": 50,
+      "width": 280,
+      "height": 300,
+      "color": "#4ECDC4",
+      "columns": [
+        { "name": "DateKey", "constraint": "PK" },
+        { "name": "Date" },
+        { "name": "Year" },
+        { "name": "Quarter" },
+        { "name": "Month" },
+        { "name": "MonthName" },
+        { "name": "Week" },
+        { "name": "DayOfWeek" },
+        { "name": "DayName" },
+        { "name": "IsWeekend" },
+        { "name": "IsHoliday" }
+      ]
+    },
+    {
+      "id": "dim_customer",
+      "name": "DimCustomer",
+      "emoji": "👤",
+      "visualType": "rectangle",
+      "x": 50,
+      "y": 450,
+      "width": 260,
+      "height": 300,
+      "color": "#95E1D3",
+      "columns": [
+        { "name": "CustomerKey", "constraint": "PK" },
+        { "name": "CustomerID" },
+        { "name": "FirstName" },
+        { "name": "LastName" },
+        { "name": "Email" },
+        { "name": "Phone" },
+        { "name": "DateOfBirth" },
+        { "name": "Gender" },
+        { "name": "City" },
+        { "name": "State" },
+        { "name": "CustomerSince" }
+      ]
+    },
+    {
+      "id": "dim_product",
+      "name": "DimProduct",
+      "emoji": "🛍️",
+      "visualType": "rectangle",
+      "x": 650,
+      "y": 1000,
+      "width": 280,
+      "height": 320,
+      "color": "#F8B500",
+      "columns": [
+        { "name": "ProductKey", "constraint": "PK" },
+        { "name": "ProductID" },
+        { "name": "ProductName" },
+        { "name": "Description" },
+        { "name": "Category" },
+        { "name": "SubCategory" },
+        { "name": "Brand" },
+        { "name": "UnitCost" },
+        { "name": "UnitPrice" },
+        { "name": "SKU" },
+        { "name": "Weight" }
+      ]
+    },
+    {
+      "id": "dim_store",
+      "name": "DimStore",
+      "emoji": "🏪",
+      "visualType": "rectangle",
+      "x": 1280,
+      "y": 450,
+      "width": 280,
+      "height": 280,
+      "color": "#A8E6CF",
+      "columns": [
+        { "name": "StoreKey", "constraint": "PK" },
+        { "name": "StoreID" },
+        { "name": "StoreName" },
+        { "name": "StoreType" },
+        { "name": "City" },
+        { "name": "State" },
+        { "name": "Country" },
+        { "name": "Phone" },
+        { "name": "Manager" },
+        { "name": "OpenDate" }
+      ]
+    }
+  ],
+  "relationships": [
+    { "from": "dim_date", "to": "fact_sales", "type": "1:N", "label": "1:N" },
+    { "from": "dim_customer", "to": "fact_sales", "type": "1:N", "label": "1:N" },
+    { "from": "dim_product", "to": "fact_sales", "type": "1:N", "label": "1:N" },
+    { "from": "dim_store", "to": "fact_sales", "type": "1:N", "label": "1:N" },
+    { "from": "dim_date", "to": "fact_inventory", "type": "1:N", "label": "1:N" },
+    { "from": "dim_product", "to": "fact_inventory", "type": "1:N", "label": "1:N" },
+    { "from": "dim_store", "to": "fact_inventory", "type": "1:N", "label": "1:N" }
+  ],
+  "annotations": [
+    {
+      "id": "legend_constellation",
+      "type": "sticky",
+      "label": "🌟 CONSTELLATION SCHEMA\n━━━━━━━━━━━━━━━━━━━━\nMultiple fact tables sharing\ncommon dimension tables\n\n💰 FactSales (Transactions)\n📦 FactInventory (Stock Levels)",
+      "x": 50,
+      "y": 50,
+      "width": 240,
+      "height": 160,
+      "color": "#FFE66D"
+    },
+    {
+      "id": "legend_facts",
+      "type": "sticky",
+      "label": "📊 FACT TABLES (2)\n━━━━━━━━━━━━━━━━━━━━\n• Measurable business metrics\n• Transactional/snapshot data\n• Foreign keys to dimensions\n• Additive measures",
+      "x": 50,
+      "y": 230,
+      "width": 240,
+      "height": 140,
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "legend_dims",
+      "type": "sticky",
+      "label": "📋 DIMENSION TABLES (4)\n━━━━━━━━━━━━━━━━━━━━\n👤 Who: Customer\n🛍️ What: Product\n📅 When: Date\n🏪 Where: Store\n\nShared across both facts!",
+      "x": 1320,
+      "y": 50,
+      "width": 240,
+      "height": 160,
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "analytics_note",
+      "type": "sticky",
+      "label": "📈 ANALYTICS POWER\n━━━━━━━━━━━━━━━━━━━━\n• Cross-fact analysis\n• Sales vs. Inventory\n• Stock optimization\n• Demand forecasting\n• Turn-over rates\n• Regional performance",
+      "x": 1320,
+      "y": 230,
+      "width": 240,
+      "height": 160,
+      "color": "#B4F8C8"
+    },
+    {
+      "id": "keys_note",
+      "type": "sticky",
+      "label": "🔑 KEYS\n━━━━━━━━━━━━━━━━━━━━\nPK = Primary Key\nFK = Foreign Key\n\n✨ Benefits:\n• Normalized dimensions\n• Reduced redundancy\n• Consistent hierarchies",
+      "x": 650,
+      "y": 1350,
+      "width": 280,
+      "height": 150,
+      "color": "#FFD3B6"
+    }
+  ]
+}
