@@ -5,3 +5,10 @@ node_modules/
 dist/
 build/
 .DS_Store
+
+# Generated diagrams (outputs)
+diagrams/*/created_diagrams/
+diagrams/*/inputs/*.json
+
+# Claude settings (user-specific)
+.claude/
